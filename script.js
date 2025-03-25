@@ -19,6 +19,10 @@ const occupations = [
   "marine biologist",
 ];
 
+//TODO:
+// MAKE AN UPDATE TO AN EXISTING FREELANCERS PRICE - VERIFY AVERAGE UPDATES
+// ADD FREELANCERS ONTO THE EXISTING LIST WITH FEW SECOND DELAY
+
 const gridContainer = document.querySelector(".grid-container");
 
 function avgPrice(arr, price) {
