@@ -9,51 +9,81 @@ const freelancers = [
   { name: "Prof. Goose", price: 72, occupation: "driver" },
 ];
 
-const names = ["Cher", "The Beatles", "Kendrick Lamar", "Eminem", "Beyonce"];
-const prices = [1500, 100, 50, 23, 9999];
-const occupations = [
-  "veterinarian",
-  "coder",
-  "deep space explorer",
-  "photographer",
-  "marine biologist",
-];
-
 //TODO:
 // MAKE AN UPDATE TO AN EXISTING FREELANCERS PRICE - VERIFY AVERAGE UPDATES
 // ADD FREELANCERS ONTO THE EXISTING LIST WITH FEW SECOND DELAY
 
 const gridContainer = document.querySelector(".grid-container");
 
-function avgPrice(arr, price) {
+function avgPrice(arr) {
   const prices = arr.map((obj) => obj.price);
   const sum = prices.reduce((acc, curr) => acc + curr, 0);
-  const avg = sum / arr.length;
+  const avg = Math.round(sum / arr.length);
   const avgSpan = document.querySelector(".average");
   avgSpan.textContent = `$ ${avg}`;
-  console.log(avg * 1);
 }
 
-function gridFill(arr) {
-  const numRows = arr.length + 1; //calculate based on length of array + 1 for column titles
-  const numCols = Object.keys(arr[0]).length; //calculates number of keys in index 0 of array.
-  console.log(numRows);
-  console.log(numCols);
-
-  // arrayOfObjectValues = Object.values(arr[i]);
-
+function render(arr) {
+  gridContainer.replaceChildren();
   for (let i = 0; i < arr.length; i++) {
-    //for each item in the array
     for (const [key, value] of Object.entries(arr[i])) {
       const gridItem = document.createElement("div");
       gridItem.classList.add("grid-item");
-      gridItem.textContent = `${value}`;
+      if (key === "price") {
+        gridItem.textContent = `$ ${value}`;
+      } else {
+        gridItem.textContent = `${value}`;
+      }
       gridContainer.appendChild(gridItem);
-      // console.log(arr[i]);
-      // console.log(`${value}`);
     }
   }
+  avgPrice(arr);
 }
 
-gridFill(freelancers);
-avgPrice(freelancers);
+// console.log(arr[i]);
+// console.log(`${value}`);
+
+function randomFreelancer() {
+  const names = ["Cher", "The Beatles", "Kendrick Lamar", "Eminem", "Beyonce"];
+  const prices = [1500, 100, 50, 23, 9999];
+  const occupations = [
+    "veterinarian",
+    "coder",
+    "deep space explorer",
+    "photographer",
+    "marine biologist",
+  ];
+
+  const nameIdx = Math.floor(Math.random() * names.length);
+  const priceIdx = Math.floor(Math.random() * prices.length);
+  const occupationIdx = Math.floor(Math.random() * occupations.length);
+  const freelancer = {
+    name: names[nameIdx],
+    price: prices[priceIdx],
+    occupation: occupations[occupationIdx],
+  };
+  return freelancer;
+}
+
+// function assumes index is known
+function updateValue(arr, indexToUpdate, keyToUpdate, newValue) {
+  if (indexToUpdate >= 0 && indexToUpdate < arr.length) {
+    arr[indexToUpdate][keyToUpdate] = newValue;
+  }
+  return arr;
+}
+
+render(freelancers);
+
+setTimeout(() => {
+  updateValue(freelancers, 2, "price", 300);
+  render(freelancers);
+}, 3000);
+
+const interval = setInterval(() => {
+  freelancers.push(randomFreelancer());
+  render(freelancers);
+  if (freelancers.length === 12) {
+    clearInterval(interval);
+  }
+}, 5000);
